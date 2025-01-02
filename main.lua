@@ -67,7 +67,7 @@ function handleGameState()
 
     return {
         score = loaded_state and loaded_state.score or 0,
-        current_mps = loaded_state and loaded_state.current_mps or 20000,
+        current_mps = loaded_state and loaded_state.current_mps or 0,
         power = loaded_state and loaded_state.power or 1,
 
         upgrades = loaded_state and loaded_state.upgrades or {
