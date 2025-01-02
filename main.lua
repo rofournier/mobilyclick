@@ -84,10 +84,22 @@ function handleGameState()
             { name = "Support", cost = 2000, bonus = 1.75, image = "images/feature_2.png", hidden = true, bought = false},
             { name = "App", cost = 10000, bonus = 2, image = "images/feature_3.png", hidden = true, bought = false},
             { name = "Café", cost = 50000, bonus = 2.5, image = "images/feature_4.png", hidden = true, bought = false},
+            { name = "Supervision2", cost = 500000, bonus = 3, image = "images/feature_1.png", hidden = true, bought = false},
             { name = "Mobilink", cost = 100000, bonus = 4, image = "images/feature_5.png", hidden = true, bought = false},
             { name = "Washoku", cost = 1000000, bonus = 5, image = "images/feature_6.png", hidden = true, bought = false},
         }
     }
+end
+
+function formatNumber(number)
+    if not number or number == nil then return "0" end
+    local units = {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Od", "Nd", "Vg", "Uvg", "Dvg", "Tvg", "Qavg", "Qivg", "Sxvg", "Spvg", "Ovg", "Nvg", "Tg", "Utg", "Dtg", "Ttg", "Qatg", "Qitg", "Sxtg", "Sptg", "Otg", "Ntg", "Qaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qi", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia"}
+    local unit = 1
+    while number >= 1000 and unit < #units do
+        number = number / 1000
+        unit = unit + 1
+    end
+    return string.format("%d", number) .. units[unit]
 end
 
 function love.update(dt)
@@ -238,7 +250,7 @@ function drawNextUpgrade(y)
     love.graphics.setColor(0, 0, 0)
     font = love.graphics.newFont(12)
     love.graphics.setFont(font)
-    y = y+100
+    y = y + 100
     for i, upgrade in ipairs(game_state.upgrades) do
         if upgrade.hidden then
             love.graphics.draw(upgrade.icon, 10, y, 0, 0.5, 0.5) -- Scale the icon to fit in the sidebar
@@ -254,11 +266,11 @@ function drawNextUpgrade(y)
             love.graphics.rectangle("fill", 70, y, 120, 20)
 
             -- Draw cost and mps below the buy button
-            cost_text = upgrade.cost .. " $"
+            cost_text = formatNumber(upgrade.cost) .. " $"
             cost_text_width = font:getWidth(cost_text)
             love.graphics.print(cost_text, 70, y + 30)
 
-            mps_text = upgrade.mps .. " $/s"
+            mps_text = formatNumber(upgrade.mps) .. " $/s"
             mps_text_width = font:getWidth(mps_text)
             love.graphics.print(mps_text, 190 - mps_text_width, y + 30)
             break
@@ -294,11 +306,11 @@ function drawVisibleUpgrades()
             love.graphics.print(upgrade.name, 70 + (120 - name_text_width) / 2, y)
 
             -- Draw cost and mps below the buy button
-            cost_text = upgrade.cost .. " $"
+            cost_text = formatNumber(upgrade.cost) .. " $"
             cost_text_width = font:getWidth(cost_text)
             love.graphics.print(cost_text, 70, y + 30)
 
-            mps_text = upgrade.mps .. " $/s"
+            mps_text = formatNumber(upgrade.mps) .. " $/s"
             mps_text_width = font:getWidth(mps_text)
             love.graphics.print(mps_text, 190 - mps_text_width, y + 30)
         end
@@ -311,20 +323,9 @@ function drawScoreAndMPS()
     local font = love.graphics.newFont(18)
     love.graphics.setFont(font) -- Set a font size for score and MPS
 
-    function formatScore(score)
-        if not score then return "0" end
-        local units = {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Od", "Nd", "Vg", "Uvg", "Dvg", "Tvg", "Qavg", "Qivg", "Sxvg", "Spvg", "Ovg", "Nvg", "Tg", "Utg", "Dtg", "Ttg", "Qatg", "Qitg", "Sxtg", "Sptg", "Otg", "Ntg", "Qaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qi", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia", "Sxa", "Spa", "Oa", "Na", "Uaa", "Daa", "Taa", "Qaaa", "Qia"}
-        local unit = 1
-        while score >= 1000 and unit < #units do
-            score = score / 1000
-            unit = unit + 1
-        end
-        return string.format("%.2f", score) .. units[unit]
-    end
-
-    local score_text = "CA: " .. formatScore(game_state.score) .. " $"
-    local mps_text = game_state.current_mps .. " $ / second"
-    local power_text = game_state.power .. " $ / click"
+    local score_text = "CA: " .. formatNumber(game_state.score) .. " $"
+    local mps_text = formatNumber(game_state.current_mps) .. " $ / second"
+    local power_text = formatNumber(game_state.power) .. " $ / click"
 
     -- Draw a background rectangle for better readability
     love.graphics.setColor(1, 1, 1, 0.8) -- White with some transparency
@@ -368,10 +369,16 @@ function drawPenguin()
         love.graphics.draw(cafe_image, penguin_x + 30, penguin_y - 100, 0, 1, 1)
     end
     if game_state.features[5].bought then
+        local cs2_image = love.graphics.newImage("images/feature_1.png")
+        love.graphics.draw(cs2_image, penguin_x + 105, penguin_y + 20, 0, 1, 1)
+        love.graphics.draw(cs2_image, penguin_x + 130, penguin_y, 0, 1, 1)
+        love.graphics.draw(cs2_image, penguin_x + 155, penguin_y - 20, 0, 1, 1)
+    end
+    if game_state.features[6].bought then
         local mobilink_image = love.graphics.newImage("images/feature_5.png")
         love.graphics.draw(mobilink_image, penguin_x - 200, penguin_y - 150, 0, 1, 1)
     end
-    if game_state.features[6].bought then
+    if game_state.features[7] and game_state.features[7].bought then
         local washoku_image = love.graphics.newImage("images/wash.png")
         love.graphics.draw(washoku_image, penguin_x - 50, penguin_y - 300, 0, 1, 1)
     end
